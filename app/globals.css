@@ -1,26 +1,428 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Fonts */
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-UltraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-DemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("/fonts/iransans/IRANSansXFaNum-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tailwind v4 tokens */
+@theme inline {
+  --font-sans: "IRANSansXFaNum", Tahoma, Arial, sans-serif;
+  --font-heading: "IRANSansXFaNum", Tahoma, Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-surface: var(--surface);
+  --color-content: var(--content);
+  --color-content-muted: var(--content-muted);
+
+  --color-header-top: var(--header-top);
+  --color-header-main: var(--header-main);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: calc(var(--radius) * 1.7);
+  --radius-3xl: calc(var(--radius) * 2.1);
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --card: #ffffff;
+  --card-foreground: #171717;
+
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+
+  --primary: #d84a2b;
+  --primary-foreground: #ffffff;
+
+  --secondary: #003b70;
+  --secondary-foreground: #ffffff;
+
+  --muted: #f3f4f4;
+  --muted-foreground: #666666;
+
+  --accent: #edf4f8;
+  --accent-foreground: #003b70;
+
+  --destructive: #dc2626;
+  --border: #dedede;
+  --input: #dedede;
+  --ring: var(--primary);
+
+  --surface: #f7f7f7;
+  --content: #2b2b2b;
+  --content-muted: #6f6f6f;
+
+  --header-top: var(--secondary);
+  --header-main: #242424;
+
+  --radius: 0.875rem;
+
+  --container-page: 1440px;
+  --container-header: 1320px;
+  --container-content: 1200px;
+  --container-padding: clamp(1rem, 3vw, 2rem);
+
+  --section-space-sm: clamp(2.75rem, 5vw, 4.5rem);
+  --section-space: clamp(3.5rem, 7vw, 6rem);
+  --section-space-lg: clamp(4.5rem, 9vw, 7.5rem);
+
+  --shadow-card: 0 12px 30px rgb(0 0 0 / 10%);
+  --shadow-soft: 0 18px 50px rgb(0 0 0 / 8%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #101214;
+  --foreground: #f8fafc;
+
+  --card: #171a1d;
+  --card-foreground: #f8fafc;
+
+  --popover: #171a1d;
+  --popover-foreground: #f8fafc;
+
+  --primary: #e65a3b;
+  --secondary: #0b477f;
+
+  --muted: #22262a;
+  --muted-foreground: #a8a8a8;
+
+  --accent: #142434;
+  --accent-foreground: #ffffff;
+
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 16%);
+
+  --surface: #15181b;
+  --content: #e8e8e8;
+  --content-muted: #b5b5b5;
+
+  --header-top: #0b477f;
+  --header-main: #171a1d;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    direction: rtl;
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground font-sans antialiased;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.9;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--primary) 24%, transparent);
+    color: var(--foreground);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-foreground;
+    margin: 0;
+    font-weight: 800;
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.05rem, 4.6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.035em;
+  }
+
+  h2 {
+    font-size: clamp(1.45rem, 2.45vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: clamp(1.15rem, 1.75vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  h4 {
+    font-size: clamp(1rem, 1.35vw, 1.25rem);
+    font-weight: 500;
+  }
+
+  h5 {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  h6 {
+    font-size: 0.925rem;
+    font-weight: 300;
+  }
+
+  p {
+    @apply text-content;
+    margin: 0;
+    line-height: 2.05;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 0.25em;
+    transition-property:
+      color, background-color, border-color, opacity, transform;
+    transition-duration: 200ms;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  strong,
+  b {
+    font-weight: 800;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .container-page,
+  .container-header,
+  .container-content {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container-page {
+    max-width: var(--container-page);
+  }
+
+  .container-header {
+    max-width: var(--container-header);
+  }
+
+  .container-content {
+    max-width: var(--container-content);
+  }
+
+  .section {
+    padding-block: var(--section-space);
+  }
+
+  .section-sm {
+    padding-block: var(--section-space-sm);
+  }
+
+  .section-lg {
+    padding-block: var(--section-space-lg);
+  }
+
+  .section-title {
+    position: relative;
+    display: inline-block;
+  }
+
+  .section-title::after {
+    content: "";
+    display: block;
+    width: 3.25rem;
+    height: 0.15rem;
+    margin-top: 0.65rem;
+    margin-inline-start: auto;
+    background-color: var(--primary);
+    border-radius: 999px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    line-height: 1.8;
+  }
+
+  .lead {
+    color: var(--content-muted);
+    font-size: clamp(0.95rem, 1.2vw, 1.0625rem);
+    line-height: 2.1;
+  }
+
+  .surface-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+  }
+
+  .surface-soft {
+    background-color: var(--surface);
+  }
+
+  .soft-card-shadow {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .brand-gradient {
+    background:
+      radial-gradient(
+        circle at top right,
+        color-mix(in oklab, var(--primary) 18%, transparent),
+        transparent 32rem
+      ),
+      linear-gradient(135deg, var(--secondary), #0b477f);
+  }
+
+  .full-bleed {
+    width: 100%;
+  }
+
+  .ltr {
+    direction: ltr;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
 }
