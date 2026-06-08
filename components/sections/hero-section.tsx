@@ -198,6 +198,7 @@ export function HeroSection({
       ? getMediaUrl(["site", "defaults", defaults.video])
       : undefined;
 
+  const backgroundType = hero?.backgroundType ?? "video";    
   const showLogotype = hero?.logotype ?? defaults.logotype.enabled;
   const showBadge = hero?.badge ?? defaults.badge.enabled;
 
@@ -234,27 +235,27 @@ export function HeroSection({
   return (
     <section className="bg-background">
       <div className="relative overflow-hidden bg-secondary text-white min-h-[calc(100svh-4.75rem)]">
-        {video ? (
-          <video
-            src={video}
-            poster={poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="pointer-events-none absolute inset-0 size-full object-cover grayscale-[20%] saturate-[0.8] contrast-[1.05]"
-          />
-        ) : poster ? (
-          <Image
-            src={poster}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        ) : null}
+      {backgroundType === "video" && video ? (
+  <video
+    src={video}
+    poster={poster}
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="metadata"
+    className="pointer-events-none absolute inset-0 size-full object-cover grayscale-[20%] saturate-[0.8] contrast-[1.05]"
+  />
+) : poster ? (
+  <Image
+    src={poster}
+    alt=""
+    fill
+    priority
+    sizes="100vw"
+    className="object-cover"
+  />
+) : null}
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/70" />
 

@@ -17,7 +17,7 @@ export const heroSchema = z.object({
   subtitle: z.string().optional(),
   poster: z.string().optional(),
   video: z.string().optional(),
-
+  backgroundType: z.enum(["video", "image"]).optional(),
   logotype: z.boolean().optional(),
   badge: z.boolean().optional(),
 

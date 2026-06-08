@@ -1,80 +1,123 @@
 "use client";
 
-import { useState } from "react";
-import { Play, X } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Play } from "lucide-react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+
+type PlayButtonSize = "sm" | "md" | "lg";
 
 type VideoLightboxProps = {
   image: string;
   video: string;
   alt: string;
+  title?: string;
+  playSize?: PlayButtonSize;
   className?: string;
   imageClassName?: string;
-  playSize?: "sm" | "md";
+  overlayClassName?: string;
+  dialogClassName?: string;
+};
+
+const playButtonClasses: Record<PlayButtonSize, string> = {
+  sm: "size-8",
+  md: "size-10 md:size-11",
+  lg: "size-12 md:size-14",
+};
+
+const playIconClasses: Record<PlayButtonSize, string> = {
+  sm: "size-3.5",
+  md: "size-4.5 md:size-5",
+  lg: "size-5 md:size-6",
+};
+
+const pulseClasses: Record<PlayButtonSize, string> = {
+  sm: "size-9",
+  md: "size-12",
+  lg: "size-16",
 };
 
 export function VideoLightbox({
   image,
   video,
   alt,
+  title = "ویدئوی سیمرکو",
+  playSize = "md",
   className,
   imageClassName,
-  playSize = "md",
+  overlayClassName,
+  dialogClassName,
 }: VideoLightboxProps) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
+    <Dialog>
+      <DialogTrigger
+        aria-label={title}
         className={cn(
-          "group relative block overflow-hidden bg-muted text-right",
-          className,
+          "group relative block overflow-hidden bg-muted p-0 text-right",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+          className
         )}
       >
         <Image
           src={image}
           alt={alt}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
+          width={900}
+          height={700}
           className={cn(
-            "object-cover transition duration-500 group-hover:scale-105",
-            imageClassName,
+            "h-full w-full object-cover transition duration-500 group-hover:scale-105",
+            imageClassName
           )}
         />
 
         <span
           className={cn(
-            "absolute inset-0 m-auto flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition group-hover:scale-110",
-            playSize === "md" ? "size-16" : "size-11",
+            "absolute inset-0 bg-secondary/10 transition group-hover:bg-secondary/25",
+            overlayClassName
+          )}
+        />
+
+        <span
+          className={cn(
+            "absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-primary shadow-md transition group-hover:scale-110",
+            playButtonClasses[playSize]
           )}
         >
-          <Play className={playSize === "md" ? "size-7" : "size-5"} />
-        </span>
-      </button>
-
-      {open ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="absolute left-5 top-5 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-            aria-label="بستن ویدئو"
-          >
-            <X className="size-5" />
-          </button>
-
-          <video
-            src={video}
-            controls
-            autoPlay
-            className="max-h-[80vh] w-full max-w-5xl rounded-2xl bg-black"
+          <span
+            className={cn(
+              "absolute animate-pulse rounded-full bg-white/25",
+              pulseClasses[playSize]
+            )}
           />
-        </div>
-      ) : null}
-    </>
+
+          <Play
+            className={cn(
+              "relative mr-0.5 fill-current",
+              playIconClasses[playSize]
+            )}
+          />
+        </span>
+      </DialogTrigger>
+
+      <DialogContent className={cn("max-w-4xl p-2", dialogClassName)}>
+        <DialogHeader>
+          <DialogTitle className="sr-only">{title}</DialogTitle>
+        </DialogHeader>
+
+        <video
+          src={video}
+          controls
+          autoPlay
+          playsInline
+          className="aspect-video w-full rounded-xl bg-black"
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

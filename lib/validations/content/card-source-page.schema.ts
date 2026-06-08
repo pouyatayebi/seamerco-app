@@ -1,28 +1,31 @@
 import { z } from "zod";
 
 export const cardSourcePageSchema = z.object({
-  title: z.string().optional(),
-  subtitle: z.string().optional(),
-  excerpt: z.string().optional(),
-  content: z.string().optional(),
+  title: z.string().min(1).optional(),
+  subtitle: z.string().min(1).optional(),
+  excerpt: z.string().min(1).optional(),
+  content: z.string().min(1).optional(),
 
-  featuredImage: z.string().optional(),
-  cover: z.string().optional(),
+  featuredImage: z.string().min(1).optional(),
+  cover: z.string().min(1).optional(),
 
-  capacity: z.string().optional(),
-  code: z.string().optional(),
+  capacity: z.string().min(1).optional(),
+  code: z.string().min(1).optional(),
+
+  relatedSolutions: z.array(z.string().min(1)).default([]),
 
   hero: z
     .object({
-      title: z.string().optional(),
-      subtitle: z.string().optional(),
-      poster: z.string().optional(),
+      title: z.string().min(1).optional(),
+      subtitle: z.string().min(1).optional(),
+      poster: z.string().min(1).optional(),
     })
     .optional(),
 
   overview: z
     .object({
-      paragraphs: z.array(z.string()).optional(),
+      title: z.string().min(1).optional(),
+      paragraphs: z.array(z.string().min(1)).default([]),
     })
     .optional(),
 });
