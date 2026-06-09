@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
 const mediaOrigin = process.env.SEAMERCO_MEDIA_ORIGIN?.replace(/\/$/, "");
+const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    if (!mediaOrigin) return [];
+    if (!isProduction || !mediaOrigin) return [];
 
     return [
       {

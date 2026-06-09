@@ -4,6 +4,9 @@ export const heroFeatureLinkSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().optional(),
   href: z.string().min(1),
+
+  icon: z.string().optional(),
+
   image: z
     .object({
       src: z.string().min(1),
