@@ -37,7 +37,7 @@ export function VideoGuideCard(props: VideoGuideCardProps) {
     <div className="flex h-full flex-col rounded-2xl bg-card p-6 text-right shadow-md ring-1 ring-border">
       <p className="text-sm font-medium text-primary">{props.titleTop}</p>
 
-      <h3 className="mt-1 text-2xl font-black leading-10 text-foreground">
+      <h3 className="mt-1 text-xl font-semibold leading-10 text-foreground">
         {props.titleBottom}
       </h3>
 
