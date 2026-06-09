@@ -124,24 +124,27 @@ function HeroCompactFeaturePanel({
   featureLinks: NonNullable<HeroContent["featureLinks"]>;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[1.85rem] border border-white/12 bg-[radial-gradient(circle_at_top_right,rgba(216,74,43,0.12),transparent_30rem),linear-gradient(135deg,rgba(7,24,39,0.96),rgba(9,54,94,0.93)_46%,rgba(3,16,31,0.96))] px-5 py-7 text-white shadow-[0_24px_72px_rgba(0,0,0,0.34)] backdrop-blur-md md:px-8 md:py-8">
-      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-l from-transparent via-white/30 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-10 bottom-0 h-px bg-gradient-to-l from-transparent via-primary/20 to-transparent" />
+    <div className="relative overflow-hidden border-t border-white/10 bg-[linear-gradient(180deg,rgba(5,28,50,0.92),rgba(3,18,34,0.96))] px-4 py-5 text-white shadow-[0_-18px_45px_rgba(0,0,0,0.24)] backdrop-blur-md md:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-primary/45 to-transparent" />
 
-      <div className="relative z-10 mx-auto max-w-6xl text-center">
-        {featureLinks.titleTop ? (
-          <p className="text-sm font-black leading-7 text-primary">
-            {featureLinks.titleTop}
-          </p>
-        ) : null}
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-4 lg:grid-cols-[13rem_1fr] lg:items-center">
+        {(featureLinks.titleTop || featureLinks.titleBottom) && (
+          <div className="text-center lg:text-right">
+            {featureLinks.titleTop ? (
+              <p className="text-xs font-black leading-5 text-primary">
+                {featureLinks.titleTop}
+              </p>
+            ) : null}
 
-        {featureLinks.titleBottom ? (
-          <h2 className="mt-1 text-xl font-semibold leading-[1.7] text-white md:text-[1.75rem]">
-            {featureLinks.titleBottom}
-          </h2>
-        ) : null}
+            {featureLinks.titleBottom ? (
+              <h2 className="mt-1 text-base font-black leading-7 text-white md:text-lg">
+                {featureLinks.titleBottom}
+              </h2>
+            ) : null}
+          </div>
+        )}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {featureLinks.items.map((rawItem, index) => {
             const item = rawItem as HeroFeatureItemWithIcon;
             const Icon = item.icon ? heroIconMap[item.icon] : null;
@@ -150,25 +153,29 @@ function HeroCompactFeaturePanel({
               <Link
                 key={item.href ?? `${item.title}-${index}`}
                 href={item.href}
-                className="group relative flex min-h-[8.25rem] flex-col items-center justify-center overflow-hidden rounded-[1.2rem] border border-white/14 bg-white/[0.028] px-4 py-4 text-center transition duration-300 hover:-translate-y-1 hover:border-primary/55 hover:bg-white/[0.055] hover:shadow-[0_16px_36px_rgba(0,0,0,0.18)]"
+                className="group relative flex h-[4.75rem] items-center gap-3 overflow-hidden rounded-xl border border-white/12 bg-white/[0.035] px-3 text-right transition duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-white/[0.065]"
               >
-                <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-l from-transparent via-white/18 to-transparent opacity-0 transition group-hover:opacity-100" />
+                <span className="absolute inset-y-3 right-0 w-0.5 rounded-full bg-primary/70 opacity-0 transition group-hover:opacity-100" />
 
                 {Icon ? (
-                  <span className="flex size-11 items-center justify-center rounded-full bg-white/[0.065] text-primary ring-1 ring-white/10 transition group-hover:bg-primary/10 group-hover:ring-primary/25">
-                    <Icon className="size-7" />
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition group-hover:bg-primary/15">
+                    <Icon className="size-6" />
                   </span>
                 ) : null}
 
-                <p className="mt-3 text-sm font-black leading-7 text-white md:text-[0.95rem]">
-                  {item.title}
-                </p>
+                <span className="min-w-0">
+                  <span className="block truncate text-[0.82rem] font-black leading-6 text-white">
+                    {item.title}
+                  </span>
 
-                {item.subtitle ? (
-                  <p className="mt-0.5 text-xs leading-6 text-white/58">
-                    {item.subtitle}
-                  </p>
-                ) : null}
+                  {item.subtitle ? (
+                    <span className="block truncate text-[0.68rem] leading-5 text-white/56">
+                      {item.subtitle}
+                    </span>
+                  ) : null}
+                </span>
+
+                <span className="mr-auto hidden size-1.5 shrink-0 rounded-full bg-primary/60 transition group-hover:bg-primary md:block" />
               </Link>
             );
           })}
