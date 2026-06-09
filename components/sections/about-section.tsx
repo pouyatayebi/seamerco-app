@@ -34,7 +34,7 @@ export function AboutSection({
 
           <div className="[direction:rtl]">
             <div className="flex h-full w-full flex-col text-right">
-              <h2 className="text-2xl font-black text-foreground md:text-[1.7rem]">
+              <h2 className="text-2xl font-bold text-foreground md:text-[1.7rem]">
                 {content.title}
               </h2>
 
