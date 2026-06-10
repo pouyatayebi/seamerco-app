@@ -6,7 +6,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
-  assetPrefix: isProduction ? "/assets" : undefined,
+  assetPrefix: "/media/site-assets",
 
   async rewrites() {
     if (!isProduction || !mediaOrigin) return [];
