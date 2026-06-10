@@ -11,6 +11,7 @@ import { guidesSectionSchema } from "@/lib/validations/content/sections/guides.s
 import { projectsShowcaseSectionSchema } from "@/lib/validations/content/sections/projects-showcase.schema";
 import { LineAdvisorSection } from "@/components/sections/line-advisor-section";
 import { lineAdvisorSectionSchema } from "@/lib/validations/content/sections/line-advisor.schema";
+import { HomeProductionLinesSection } from "@/components/sections/home-production-lines-section";
 
 export default async function HomePage() {
   const [
@@ -46,10 +47,12 @@ export default async function HomePage() {
 
       <AboutSection content={aboutContent} />
 
-      {pageContent.cardGrid ? (
+      {/* {pageContent.cardGrid ? (
         <ContentCardGridSection content={pageContent.cardGrid} />
-      ) : null}
-
+      ) : null} */}
+{pageContent.cardGrid ? (
+  <HomeProductionLinesSection content={pageContent.cardGrid} />
+) : null}
       <GuidesSection content={guidesContent} />
 
       <ProjectsShowcaseSection content={projectsContent} />

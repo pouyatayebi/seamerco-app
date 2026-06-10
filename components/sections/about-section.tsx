@@ -3,6 +3,7 @@ import { MoveLeft } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { VideoLightbox } from "@/components/shared/video-lightbox";
+import { IndustrialFramePattern } from "@/components/svg/patterns/industrial-frame-pattern";
 import { getPageMediaUrl } from "@/lib/media/media-url";
 import type { AboutSectionContent } from "@/lib/validations/content/sections/about.schema";
 
@@ -25,15 +26,21 @@ export function AboutSection({
       <Container size="content">
         <div className="grid gap-10 lg:grid-cols-[25rem_1fr] xl:grid-cols-[27rem_1fr] lg:items-start [direction:ltr]">
           <div className="hidden [direction:rtl] lg:block">
-            <VideoLightbox
-              image={mainImage}
-              video={mainVideo}
-              alt={content.media.main.alt}
-              playSize="sm"
-              className="h-[30rem] w-full rounded-[1.6rem] shadow-[0_18px_45px_rgba(0,0,0,0.10)]"
-              imageClassName="rounded-[1.6rem]"
-              overlayClassName="bg-secondary/10 group-hover:bg-secondary/22"
-            />
+            <div className="relative">
+              <IndustrialFramePattern className="pointer-events-none absolute -right-8 -top-8 h-[calc(100%+4rem)] w-[calc(100%+4rem)] text-secondary/12" />
+
+              <div className="relative rounded-[1.75rem] bg-white p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.10)]">
+                <VideoLightbox
+                  image={mainImage}
+                  video={mainVideo}
+                  alt={content.media.main.alt}
+                  playSize="sm"
+                  className="h-[30rem] w-full rounded-[1.55rem]"
+                  imageClassName="rounded-[1.55rem]"
+                  overlayClassName="bg-secondary/10 group-hover:bg-secondary/22"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="[direction:rtl]">
