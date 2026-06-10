@@ -3,7 +3,7 @@ import { MoveLeft } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { VideoLightbox } from "@/components/shared/video-lightbox";
-import { IndustrialFramePattern } from "@/components/svg/patterns/industrial-frame-pattern";
+import { AboutIndustrialPattern } from "@/components/svg/patterns/about-industrial-pattern";
 import { getPageMediaUrl } from "@/lib/media/media-url";
 import type { AboutSectionContent } from "@/lib/validations/content/sections/about.schema";
 
@@ -22,87 +22,59 @@ export function AboutSection({
   const mainVideo = getPageMediaUrl(mediaSegments, content.media.main.video);
 
   return (
-    <section className="section bg-background">
-      <Container size="content">
-        <div className="grid gap-10 lg:grid-cols-[25rem_1fr] xl:grid-cols-[27rem_1fr] lg:items-start [direction:ltr]">
-          <div className="hidden [direction:rtl] lg:block">
-            <div className="relative">
-              <IndustrialFramePattern className="pointer-events-none absolute -right-8 -top-8 h-[calc(100%+4rem)] w-[calc(100%+4rem)] text-secondary/12" />
+    <section className="section relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_52%,#ffffff_100%)]">
+      <AboutIndustrialPattern className="pointer-events-none absolute inset-0 h-full w-full text-secondary/35 [--pattern-accent:hsl(var(--primary))]" />
 
-              <div className="relative rounded-[1.75rem] bg-white p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.10)]">
-                <VideoLightbox
-                  image={mainImage}
-                  video={mainVideo}
-                  alt={content.media.main.alt}
-                  playSize="sm"
-                  className="h-[30rem] w-full rounded-[1.55rem]"
-                  imageClassName="rounded-[1.55rem]"
-                  overlayClassName="bg-secondary/10 group-hover:bg-secondary/22"
-                />
-              </div>
-            </div>
+      <Container size="content">
+        <div className="relative z-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch [direction:ltr]">
+          <div className="rounded-[2rem] border bg-white/85 p-3 shadow-[0_20px_55px_rgba(0,0,0,0.08)] backdrop-blur-sm [direction:rtl]">
+            <VideoLightbox
+              image={mainImage}
+              video={mainVideo}
+              alt={content.media.main.alt}
+              playSize="sm"
+              className="h-[24rem] w-full rounded-[1.6rem] md:h-[28rem] lg:h-full"
+              imageClassName="rounded-[1.6rem]"
+              overlayClassName="bg-secondary/10 group-hover:bg-secondary/22"
+            />
           </div>
 
-          <div className="[direction:rtl]">
-            <div className="max-w-4xl text-right">
-              {content.eyebrow ? (
-                <p className="mb-2 text-xs font-black tracking-[0.22em] text-primary">
-                  {content.eyebrow}
+          <div className="flex flex-col rounded-[2rem] border bg-white/90 p-6 text-right shadow-[0_20px_55px_rgba(0,0,0,0.07)] backdrop-blur-sm md:p-8 [direction:rtl]">
+            {content.eyebrow ? (
+              <p className="mb-2 text-[11px] font-black tracking-[0.28em] text-primary">
+                {content.eyebrow}
+              </p>
+            ) : null}
+
+            <h2 className="text-2xl font-black leading-[1.65] text-foreground md:text-[2rem]">
+              {content.title}
+            </h2>
+
+            <div className="mt-4 text-justify text-[0.92rem] leading-[2.25] text-content-muted">
+              <p>
+                <strong className="font-black text-foreground">
+                  {content.introStrong}
+                </strong>{" "}
+                {content.paragraphs[0]}
+              </p>
+
+              {content.paragraphs.slice(1, 4).map((paragraph) => (
+                <p key={paragraph} className="mt-2">
+                  {paragraph}
                 </p>
-              ) : null}
-
-              <h2 className="text-2xl font-black leading-[1.6] text-foreground md:text-[1.9rem]">
-                {content.title}
-              </h2>
-
-              <div className="mt-1 text-justify text-[0.92rem] leading-[2.35] text-content-muted">
-                <p>
-                  <strong className="font-black text-foreground">
-                    {content.introStrong}
-                  </strong>{" "}
-                  {content.paragraphs[0]}
-                </p>
-
-                {content.paragraphs.slice(1, 5).map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-
-                <Link
-                  href={content.readMore.href}
-                  className="inline-flex items-center gap-2 pt-1 text-sm font-bold text-primary transition hover:-translate-x-1"
-                >
-                  {content.readMore.label}
-                  <MoveLeft className="size-5 stroke-[3]" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="mt-3 hidden max-w-[25rem] grid-cols-3 gap-2 lg:grid">
-              {content.media.items.map((item) => (
-                <VideoLightbox
-                  key={item.video}
-                  image={getPageMediaUrl(mediaSegments, item.image)}
-                  video={getPageMediaUrl(mediaSegments, item.video)}
-                  alt={item.alt}
-                  playSize="sm"
-                  className="aspect-[1.35/1] rounded-xl shadow-[0_7px_16px_rgba(0,0,0,0.08)]"
-                  imageClassName="rounded-xl"
-                  overlayClassName="bg-secondary/5 group-hover:bg-secondary/18"
-                />
               ))}
             </div>
 
-            <div className="mt-7 space-y-4 lg:hidden">
-              <VideoLightbox
-                image={mainImage}
-                video={mainVideo}
-                alt={content.media.main.alt}
-                playSize="sm"
-                className="h-[21rem] w-full rounded-[1.5rem] shadow-md md:h-[25rem]"
-                imageClassName="rounded-[1.5rem]"
-              />
+            <Link
+              href={content.readMore.href}
+              className="mt-4 inline-flex w-fit items-center gap-2 text-sm font-bold text-primary transition hover:-translate-x-1"
+            >
+              {content.readMore.label}
+              <MoveLeft className="size-5 stroke-[3]" />
+            </Link>
 
-              <div className="grid grid-cols-3 gap-2">
+            <div className="mt-auto hidden pt-5 lg:block">
+              <div className="grid max-w-[24rem] grid-cols-3 gap-2">
                 {content.media.items.map((item) => (
                   <VideoLightbox
                     key={item.video}
@@ -110,12 +82,27 @@ export function AboutSection({
                     video={getPageMediaUrl(mediaSegments, item.video)}
                     alt={item.alt}
                     playSize="sm"
-                    className="aspect-[1.15/1] rounded-xl"
+                    className="aspect-[1.35/1] rounded-xl shadow-[0_7px_16px_rgba(0,0,0,0.08)]"
                     imageClassName="rounded-xl"
+                    overlayClassName="bg-secondary/5 group-hover:bg-secondary/18"
                   />
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 lg:hidden [direction:rtl]">
+            {content.media.items.map((item) => (
+              <VideoLightbox
+                key={item.video}
+                image={getPageMediaUrl(mediaSegments, item.image)}
+                video={getPageMediaUrl(mediaSegments, item.video)}
+                alt={item.alt}
+                playSize="sm"
+                className="aspect-[1.15/1] rounded-xl"
+                imageClassName="rounded-xl"
+              />
+            ))}
           </div>
         </div>
       </Container>

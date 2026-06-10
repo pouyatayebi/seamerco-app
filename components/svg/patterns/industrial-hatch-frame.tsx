@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-export function IndustrialFramePattern(props: SVGProps<SVGSVGElement>) {
+export function IndustrialHashFrame(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 520 520" fill="none" aria-hidden="true" {...props}>
       <defs>
