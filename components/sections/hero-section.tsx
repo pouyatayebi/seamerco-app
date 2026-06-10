@@ -60,29 +60,32 @@ function HeroHomeFeaturePanel({
   featureLinks: NonNullable<HeroContent["featureLinks"]>;
 }) {
   return (
-    <div className="overflow-hidden rounded-[1.35rem] border border-white/45 bg-white/92 p-3 text-foreground shadow-[0_18px_55px_rgba(0,0,0,0.18)] backdrop-blur-md lg:flex lg:items-center lg:gap-5">
+    <div className="relative overflow-hidden rounded-[1.7rem] border border-white/60 bg-white/72 p-3 text-foreground shadow-[0_22px_60px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-2xl lg:flex lg:items-stretch lg:gap-4">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.18)_45%,rgba(255,255,255,0.35))]" />
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-l from-transparent via-white to-transparent" />
+
       {(featureLinks.titleTop || featureLinks.titleBottom) && (
-        <div className="mb-4 flex min-w-56 items-center justify-center border-b border-border/70 pb-4 lg:mb-0 lg:min-w-64 lg:justify-start lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
+        <div className="relative z-10 mb-3 flex items-center justify-center border-b border-white/45 pb-3 lg:mb-0 lg:w-[15.25rem] lg:shrink-0 lg:justify-center lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
           <div className="text-right">
             {featureLinks.titleTop ? (
               <div className="mb-1.5 flex items-center justify-end gap-3">
-                <span className="h-0.5 w-16 rounded-full bg-primary lg:w-20" />
-                <span className="text-lg font-medium leading-7 text-secondary lg:text-[1.35rem]">
+                <span className="h-px w-14 rounded-full bg-primary/80 lg:w-16" />
+                <span className="text-base font-semibold leading-7 text-secondary lg:text-[1.15rem]">
                   {featureLinks.titleTop}
                 </span>
               </div>
             ) : null}
 
             {featureLinks.titleBottom ? (
-              <p className="text-2xl font-black leading-9 text-secondary lg:text-[1.7rem]">
+              <h2 className="text-[1.5rem] font-bold leading-9 text-secondary lg:text-[1.75rem]">
                 {featureLinks.titleBottom}
-              </p>
+              </h2>
             ) : null}
           </div>
         </div>
       )}
 
-      <div className="grid w-full gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative z-10 grid w-full gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {featureLinks.items.map((rawItem, index) => {
           const item = rawItem as HeroFeatureItemWithIcon;
           const Icon = item.icon ? heroIconMap[item.icon] : null;
@@ -91,21 +94,23 @@ function HeroHomeFeaturePanel({
             <Link
               key={item.href ?? `${item.title}-${index}`}
               href={item.href}
-              className="group flex h-[3.35rem] items-center gap-2.5 rounded-xl border border-border/80 bg-white px-3 text-right shadow-[0_2px_9px_rgba(0,0,0,0.09)] transition hover:border-primary/60 hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)]"
+              className="group relative flex h-[3.1rem] items-center gap-2.5 overflow-hidden rounded-xl border border-white/70 bg-white/58 px-3 text-right shadow-[0_5px_14px_rgba(12,28,45,0.10),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white/78 hover:shadow-[0_10px_24px_rgba(12,28,45,0.14)]"
             >
+              <span className="absolute inset-y-2 right-0 w-0.5 rounded-full bg-primary/70 opacity-0 transition group-hover:opacity-100" />
+
               {Icon ? (
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-primary transition group-hover:bg-primary/10">
-                  <Icon className="size-6" />
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/55 text-primary ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition group-hover:bg-primary/10 group-hover:ring-primary/20">
+                  <Icon className="size-5" />
                 </span>
               ) : null}
 
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-[0.78rem] font-black leading-5 text-foreground md:text-[0.82rem]">
+                <span className="truncate text-[0.78rem] font-black leading-5 text-foreground">
                   {item.title}
                 </span>
 
                 {item.subtitle ? (
-                  <span className="truncate text-[0.66rem] leading-4 text-content-muted">
+                  <span className="truncate text-[0.66rem] leading-4 text-content-muted/80">
                     {item.subtitle}
                   </span>
                 ) : null}

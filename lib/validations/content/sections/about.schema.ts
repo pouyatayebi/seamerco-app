@@ -8,6 +8,7 @@ const aboutMediaItemSchema = z.object({
 
 export const aboutSectionSchema = z.object({
   title: z.string().min(1),
+  eyebrow: z.string().optional(),
   introStrong: z.string().min(1),
   paragraphs: z.array(z.string().min(1)).min(1),
 
