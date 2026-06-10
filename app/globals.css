@@ -142,6 +142,17 @@
   --secondary: #003b70;
   --secondary-foreground: #ffffff;
 
+  /* Projects Section */
+  --projects-section-start: #0b4c8f;
+  --projects-section-middle: #063b6f;
+  --projects-section-end: #021f3a;
+
+  --projects-card-bg: rgb(255 255 255 / 0.08);
+  --projects-card-bg-hover: rgb(255 255 255 / 0.12);
+  --projects-card-border: rgb(255 255 255 / 0.16);
+
+  --projects-pattern-accent: var(--primary);
+
   --muted: #f3f4f4;
   --muted-foreground: #666666;
 

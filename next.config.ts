@@ -4,6 +4,10 @@ const mediaOrigin = process.env.SEAMERCO_MEDIA_ORIGIN?.replace(/\/$/, "");
 const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+
+  assetPrefix: isProduction ? "/assets" : undefined,
+
   async rewrites() {
     if (!isProduction || !mediaOrigin) return [];
 

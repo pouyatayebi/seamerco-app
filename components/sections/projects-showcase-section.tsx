@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -9,12 +10,12 @@ import {
 } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { ProjectsIndustrialPattern } from "@/components/svg/patterns/projects-industrial-pattern";
 import { readYamlContent } from "@/lib/content/read-yaml";
 import { getPageMediaUrl } from "@/lib/media/media-url";
 import type { ProjectPageContent } from "@/lib/validations/content/project.schema";
 import { projectPageSchema } from "@/lib/validations/content/project.schema";
 import type { ProjectsShowcaseSectionContent } from "@/lib/validations/content/sections/projects-showcase.schema";
-import Image from "next/image";
 
 type ResolvedProject = ProjectPageContent & {
   slug: string;
@@ -48,69 +49,80 @@ export async function ProjectsShowcaseSection({
   if (!projects.length) return null;
 
   return (
-    <section className="section bg-secondary text-white">
-      <Container size="content">
-        <div className="w-full text-right">
+    <section className="section relative overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgb(255_255_255/0.10),transparent_34rem),linear-gradient(180deg,var(--projects-section-start)_0%,var(--projects-section-middle)_50%,var(--projects-section-end)_100%)] text-white">
+<ProjectsIndustrialPattern
+  className="pointer-events-none absolute inset-0 h-full w-full text-white/18 [--pattern-accent:var(--primary)]"
+  accentOpacity={0.82}
+  shapeOpacity={0.16}
+  lineOpacity={0.08}
+  dotOpacity={0.16}
+/>
+      <Container size="content" className="relative z-10">
+        <div className="mx-auto max-w-5xl text-right">
           {content.eyebrow ? (
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-primary">
+            <p className="text-[11px] font-black uppercase tracking-[0.32em] text-primary">
               {content.eyebrow}
             </p>
           ) : null}
 
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-white md:text-3xl">
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-white md:text-3xl">
             {content.title}
           </h2>
 
           {content.description || content.sideDescription ? (
-            <p className="mt-3 max-w-none text-sm leading-8 text-white/78 md:text-[15px]">
-              {content.description} {content.sideDescription}{" "}
+            <div className="mt-4 max-w-4xl">
+              <p className="text-sm leading-8 text-white/78 md:text-[15px]">
+                {content.description} {content.sideDescription}
+              </p>
+
               {content.allProjectsHref && content.allProjectsLabel ? (
                 <Link
                   href={content.allProjectsHref}
-                  className="inline-flex items-center gap-1 font-bold text-primary transition-colors duration-300 hover:text-white"
+                  className="mt-2 inline-flex items-center gap-1 font-bold text-primary transition hover:text-white"
                 >
                   {content.allProjectsLabel}
                   <ArrowLeft className="size-4" />
                 </Link>
               ) : null}
-            </p>
+            </div>
           ) : null}
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <article
               key={project.slug}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition-[box-shadow,border-color,transform] duration-300 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_18px_42px_rgba(0,0,0,0.45)]"
+              className="group overflow-hidden rounded-[1.6rem] border border-[var(--projects-card-border)] bg-[var(--projects-card-bg)] shadow-[0_18px_45px_rgb(0_0_0/0.32)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-primary/35 hover:bg-[var(--projects-card-bg-hover)] hover:shadow-[0_26px_70px_rgb(0_0_0/0.42)]"
             >
               <Link href={project.href} className="flex h-full flex-col">
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="relative aspect-[1.55/1] overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    className="object-cover saturate-[0.82] transition duration-700 group-hover:scale-[1.04] group-hover:saturate-100"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/95 via-secondary/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/95 via-secondary/35 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
 
                   {project.tag ? (
-                    <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-secondary">
+                    <div className="absolute right-3 top-3 rounded-full border border-white/50 bg-white/92 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-secondary shadow-sm">
                       <span className="inline-flex items-center gap-1">
-                        <Factory className="size-3" />
+                        <Factory className="size-3 text-primary" />
                         {project.tag}
                       </span>
                     </div>
                   ) : null}
                 </div>
 
-                <div className="flex flex-1 flex-col px-4 py-4">
-                  <h3 className="text-lg font-bold text-white">
+                <div className="flex flex-1 flex-col px-4 py-4 text-right">
+                  <h3 className="text-lg font-black leading-8 text-white">
                     {project.title}
                   </h3>
 
-                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-white/85">
+                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-white/82">
                     {project.location ? (
                       <div className="flex items-center gap-1.5">
                         <MapPin className="size-3.5 text-primary" />
@@ -141,21 +153,21 @@ export async function ProjectsShowcaseSection({
                   </div>
 
                   {project.lineType ? (
-                    <p className="mt-4 line-clamp-2 text-sm leading-6 text-white/75">
+                    <p className="mt-4 line-clamp-2 text-sm leading-6 text-white/70">
                       {project.lineType}
                     </p>
                   ) : null}
 
                   <div className="mt-auto flex items-center justify-between pt-5 text-xs">
                     {project.capacity ? (
-                      <span className="font-medium text-white/90">
+                      <span className="font-bold text-white/88">
                         {project.capacity}
                       </span>
                     ) : (
                       <span />
                     )}
 
-                    <span className="inline-flex items-center gap-1 font-semibold text-primary">
+                    <span className="inline-flex items-center gap-1 font-black text-primary transition group-hover:text-white">
                       {content.detailsLabel}
                       <ArrowLeft className="size-3.5" />
                     </span>
