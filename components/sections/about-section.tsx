@@ -23,7 +23,7 @@ export function AboutSection({
 
   return (
     <section className="section relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_52%,#ffffff_100%)]">
-      <AboutIndustrialPattern className="pointer-events-none absolute inset-0 h-full w-full text-secondary/35 [--pattern-accent:hsl(var(--primary))]" />
+      <AboutIndustrialPattern className="hidden lg:block pointer-events-none absolute inset-0 h-full w-full text-secondary/35 [--pattern-accent:hsl(var(--primary))]" />
 
       <Container size="content">
         <div className="relative z-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch [direction:ltr]">

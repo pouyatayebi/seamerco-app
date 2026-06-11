@@ -11,8 +11,17 @@ import { cn } from "@/lib/utils";
 import type { HeroContent } from "@/lib/validations/content/sections/hero.schema";
 import type { SiteDefaults } from "@/lib/validations/content/site/defaults.schema";
 
+type HeroBreadcrumbItem = {
+  title: string;
+  href?: string;
+};
+
+type HeroContentWithExtras = HeroContent & {
+  breadcrumbs?: HeroBreadcrumbItem[];
+};
+
 type HeroSectionProps = {
-  hero?: HeroContent;
+  hero?: HeroContentWithExtras;
   defaults: SiteDefaults["hero"];
   pageSegments: string[];
   variant?: "home" | "page";
@@ -23,61 +32,29 @@ type HeroFeatureItemWithIcon =
     icon?: HeroIconKey;
   };
 
-function createBreadcrumbItems(pageSegments: string[], currentTitle: string) {
-  if (!pageSegments.length || pageSegments[0] === "home") return [];
-
-  const labels: Record<string, string> = {
-    solutions: "خطوط تولید",
-    machinery: "ماشین‌آلات",
-    projects: "پروژه‌ها",
-    blog: "مقالات",
-    "about-us": "درباره ما",
-    "contact-us": "تماس با ما",
-    "factory-setup": "راه‌اندازی کارخانه",
-    "used-equipment": "ماشین‌آلات دست دوم",
-    tomato: "خط تولید رب گوجه فرنگی",
-    seamer: "ماشین‌آلات دربندی",
-  };
-
-  return [
-    { title: "صفحه اصلی", href: "/" },
-    ...pageSegments.map((segment, index) => {
-      const isLast = index === pageSegments.length - 1;
-
-      return {
-        title: isLast ? currentTitle : (labels[segment] ?? segment),
-        href: isLast
-          ? undefined
-          : `/${pageSegments.slice(0, index + 1).join("/")}`,
-      };
-    }),
-  ];
-}
-
 function HeroHomeFeaturePanel({
   featureLinks,
 }: {
   featureLinks: NonNullable<HeroContent["featureLinks"]>;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[1.7rem] border border-white/60 bg-white/72 p-3 text-foreground shadow-[0_22px_60px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-2xl lg:flex lg:items-stretch lg:gap-4">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.55),rgba(255,255,255,0.18)_45%,rgba(255,255,255,0.35))]" />
-      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-l from-transparent via-white to-transparent" />
+    <div className="relative overflow-hidden rounded-[1.55rem] border border-white/70 bg-white/94 p-3 text-foreground shadow-[0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl lg:flex lg:items-stretch lg:gap-4">
+      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-l from-transparent via-white to-transparent" />
 
       {(featureLinks.titleTop || featureLinks.titleBottom) && (
-        <div className="relative z-10 mb-3 flex items-center justify-center border-b border-white/45 pb-3 lg:mb-0 lg:w-[15.25rem] lg:shrink-0 lg:justify-center lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
+        <div className="mb-3 flex items-center justify-start lg:justify-end border-b border-border/55 pb-3 lg:mb-0 lg:w-[15rem] lg:shrink-0 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
           <div className="text-right">
             {featureLinks.titleTop ? (
-              <div className="mb-1.5 flex items-center justify-end gap-3">
-                <span className="h-px w-14 rounded-full bg-primary/80 lg:w-16" />
-                <span className="text-base font-semibold leading-7 text-secondary lg:text-[1.15rem]">
+              <div className="mb-1 flex items-center justify-end gap-3">
+                <span className="h-0.5 w-14 rounded-full bg-primary lg:w-16" />
+                <span className="text-base font-semibold leading-7 text-secondary">
                   {featureLinks.titleTop}
                 </span>
               </div>
             ) : null}
 
             {featureLinks.titleBottom ? (
-              <h2 className="text-[1.5rem] font-bold leading-9 text-secondary lg:text-[1.75rem]">
+              <h2 className="text-[1.45rem] font-black leading-9 text-secondary lg:text-[1.65rem]">
                 {featureLinks.titleBottom}
               </h2>
             ) : null}
@@ -94,12 +71,10 @@ function HeroHomeFeaturePanel({
             <Link
               key={item.href ?? `${item.title}-${index}`}
               href={item.href}
-              className="group relative flex h-[3.1rem] items-center gap-2.5 overflow-hidden rounded-xl border border-white/70 bg-white/58 px-3 text-right shadow-[0_5px_14px_rgba(12,28,45,0.10),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white/78 hover:shadow-[0_10px_24px_rgba(12,28,45,0.14)]"
+              className="group flex h-[3.15rem] items-center gap-2.5 rounded-xl border border-border/65 bg-white px-3 text-right shadow-[0_3px_10px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-[0_8px_18px_rgba(0,0,0,0.13)]"
             >
-              <span className="absolute inset-y-2 right-0 w-0.5 rounded-full bg-primary/70 opacity-0 transition group-hover:opacity-100" />
-
               {Icon ? (
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/55 text-primary ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition group-hover:bg-primary/10 group-hover:ring-primary/20">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface text-primary ring-1 ring-border/60 transition group-hover:bg-primary/10 group-hover:ring-primary/20">
                   <Icon className="size-5" />
                 </span>
               ) : null}
@@ -110,7 +85,7 @@ function HeroHomeFeaturePanel({
                 </span>
 
                 {item.subtitle ? (
-                  <span className="truncate text-[0.66rem] leading-4 text-content-muted/80">
+                  <span className="truncate text-[0.66rem] leading-4 text-content-muted">
                     {item.subtitle}
                   </span>
                 ) : null}
@@ -229,7 +204,7 @@ export function HeroSection({
   const featureLinks = hero?.featureLinks;
   const hasFeatureLinks = Boolean(featureLinks?.items?.length);
   const isCompactFeature = featureLinks?.variant === "compact";
-  const breadcrumbs = createBreadcrumbItems(pageSegments, title);
+  const breadcrumbs = hero?.breadcrumbs ?? [];
 
   const featurePanel =
     hasFeatureLinks && featureLinks ? (
@@ -249,7 +224,7 @@ export function HeroSection({
             ? "min-h-[calc(100svh-6.25rem)] md:min-h-[calc(100svh-5.5rem)]"
             : hasFeatureLinks
               ? "min-h-[calc(100svh-5.5rem)]"
-              : "min-h-[calc(78svh-4.75rem)]"
+              : "min-h-[calc(78svh-4.75rem)]",
         )}
       >
         {backgroundType === "video" && video ? (
@@ -291,7 +266,7 @@ export function HeroSection({
           <div
             className={cn(
               "flex flex-1 items-center justify-center px-4 text-center md:px-8",
-              isHome ? "pt-8 md:pt-10" : hasFeatureLinks ? "pt-10" : "pt-16"
+              isHome ? "pt-8 md:pt-10" : hasFeatureLinks ? "pt-10" : "pt-16",
             )}
           >
             <div
@@ -301,7 +276,7 @@ export function HeroSection({
                   ? "-translate-y-6 md:-translate-y-10 lg:-translate-y-12"
                   : hasFeatureLinks
                     ? "-translate-y-8 md:-translate-y-12"
-                    : "-translate-y-2 md:-translate-y-4"
+                    : "-translate-y-2 md:-translate-y-4",
               )}
             >
               {logotypeSrc ? (
@@ -321,7 +296,7 @@ export function HeroSection({
                     "mx-auto flex w-full max-w-xl items-center gap-3 font-normal text-white/90",
                     isHome
                       ? "text-xs sm:text-sm md:text-base lg:text-lg"
-                      : "text-sm md:text-base"
+                      : "text-sm md:text-base",
                   )}
                 >
                   <span className="h-px flex-1 bg-white/45" />
@@ -335,28 +310,29 @@ export function HeroSection({
                   "text-balance font-semibold tracking-tight text-white",
                   isHome
                     ? "text-3xl sm:text-4xl md:text-5xl lg:text-[48px]"
-                    : "text-3xl leading-[1.5] md:text-5xl"
+                    : "text-3xl leading-[1.5] md:text-5xl",
                 )}
               >
                 {title}
               </h1>
 
-              {!isHome ? <HeroBreadcrumb items={breadcrumbs} /> : null}
+              {!isHome && breadcrumbs.length ? (
+                <HeroBreadcrumb items={breadcrumbs} />
+              ) : null}
             </div>
           </div>
 
           {hasFeatureLinks ? (
             <div
               className={cn(
-                "w-full px-4 pb-14 sm:px-6 lg:px-8",
+                "hidden w-full px-4 pb-5 sm:px-6 lg:block lg:px-8",
                 isHome ? "-mt-3 md:-mt-5" : "",
-                isCompactFeature && "hidden lg:block"
               )}
             >
               <div
                 className={cn(
                   "mx-auto",
-                  isCompactFeature ? "max-w-[68rem]" : "max-w-[62rem]"
+                  isCompactFeature ? "max-w-[68rem]" : "max-w-[62rem]",
                 )}
               >
                 {featurePanel}
@@ -366,14 +342,13 @@ export function HeroSection({
         </div>
       </div>
 
-      {hasFeatureLinks && isCompactFeature ? (
-        <div className="px-4 py-5 sm:px-6 md:py-6 lg:hidden">
-          {featurePanel}
-        </div>
-      ) : null}
-
-      {hasFeatureLinks && !isCompactFeature ? (
-        <div className="px-4 py-5 sm:px-6 md:py-6 lg:hidden">
+      {hasFeatureLinks ? (
+        <div
+          className={cn(
+            "px-4 py-4 sm:px-6 md:py-5 lg:hidden",
+            isHome && "bg-background",
+          )}
+        >
           <div className="mx-auto max-w-6xl">{featurePanel}</div>
         </div>
       ) : null}

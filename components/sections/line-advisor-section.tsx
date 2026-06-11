@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   Clipboard,
   Factory,
@@ -14,12 +15,22 @@ import {
 import { motion } from "framer-motion";
 
 import { Container } from "@/components/shared/container";
+import { LineAdvisorIndustrialPattern } from "@/components/svg/patterns/line-advisor-industrial-pattern";
 import { cn } from "@/lib/utils";
 import type { LineAdvisorSectionContent } from "@/lib/validations/content/sections/line-advisor.schema";
 
 type LineAdvisorSectionProps = {
   content: LineAdvisorSectionContent;
   whatsappHref?: string;
+};
+
+type StepId = "line" | "investment" | "result";
+
+type Recommendation = {
+  title: string;
+  capacity: string;
+  configuration: string;
+  note: string;
 };
 
 function getWhatsappNumber(whatsappHref?: string) {
@@ -38,16 +49,17 @@ export function LineAdvisorSection({
 }: LineAdvisorSectionProps) {
   const [lineId, setLineId] = useState(content.lines[0]?.id);
   const [investmentId, setInvestmentId] = useState(content.investments[1]?.id);
+  const [activeStep, setActiveStep] = useState<StepId>("line");
   const [modalOpen, setModalOpen] = useState(false);
 
   const selectedLine = useMemo(
     () => content.lines.find((item) => item.id === lineId),
-    [content.lines, lineId]
+    [content.lines, lineId],
   );
 
   const selectedInvestment = useMemo(
     () => content.investments.find((item) => item.id === investmentId),
-    [content.investments, investmentId]
+    [content.investments, investmentId],
   );
 
   const recommendation = useMemo(() => {
@@ -56,263 +68,538 @@ export function LineAdvisorSection({
   }, [content.recommendations, investmentId, lineId]);
 
   const message = useMemo(() => {
+    const labels = content.ui.whatsappMessageLines;
+
     return [
-      "سلام، برای دریافت پیش‌فاکتور اولیه از سایت سیمرکو پیام می‌دهم.",
+      labels.greeting,
       "",
-      `خط تولید انتخابی: ${selectedLine?.label ?? "-"}`,
-      `سطح سرمایه‌گذاری: ${selectedInvestment?.label ?? "-"}`,
-      `پیشنهاد اولیه: ${recommendation?.title ?? "-"}`,
-      `ظرفیت پیشنهادی: ${recommendation?.capacity ?? "-"}`,
-      `پیکربندی پیشنهادی: ${recommendation?.configuration ?? "-"}`,
+      `${labels.line}: ${selectedLine?.label ?? "-"}`,
+      `${labels.investment}: ${selectedInvestment?.label ?? "-"}`,
+      `${labels.recommendation}: ${recommendation?.title ?? "-"}`,
+      `${labels.capacity}: ${recommendation?.capacity ?? "-"}`,
+      `${labels.configuration}: ${recommendation?.configuration ?? "-"}`,
       "",
-      "لطفا برای بررسی فنی و اعلام حدود قیمت با من تماس بگیرید.",
+      labels.request,
     ].join("\n");
-  }, [recommendation, selectedInvestment, selectedLine]);
+  }, [content.ui.whatsappMessageLines, recommendation, selectedInvestment, selectedLine]);
 
   const whatsappNumber = getWhatsappNumber(whatsappHref ?? content.cta.href);
   const whatsappUrl = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
     : content.cta.href;
 
-  return (
-    <section className="relative overflow-hidden bg-background py-14 md:py-18">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_18%,rgba(216,74,43,0.08),transparent_24rem),radial-gradient(circle_at_88%_18%,rgba(0,59,112,0.10),transparent_28rem),linear-gradient(180deg,#fff,#f8fafc_48%,#fff)]" />
+  const steps = [
+    {
+      id: "line" as const,
+      label: content.steps.line,
+      number: content.ui.stepNumbers.line,
+    },
+    {
+      id: "investment" as const,
+      label: content.steps.investment,
+      number: content.ui.stepNumbers.investment,
+    },
+    {
+      id: "result" as const,
+      label: content.steps.result,
+      number: content.ui.stepNumbers.result,
+    },
+  ];
 
-      <Container size="content" className="relative">
-        <div className="grid gap-7 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-          <div>
-            {content.eyebrow ? (
-              <p className="eyebrow">{content.eyebrow}</p>
+  return (
+    <section className="section relative overflow-hidden bg-[linear-gradient(135deg,var(--background)_0%,var(--surface)_48%,var(--background)_100%)]">
+      <LineAdvisorIndustrialPattern
+        className="hidden lg:block pointer-events-none absolute inset-0 h-full w-full text-secondary/18 [--pattern-accent:var(--primary)]"
+        accentOpacity={0.24}
+        shapeOpacity={0.12}
+        lineOpacity={0.08}
+      />
+
+      <Container size="content" className="relative z-10">
+        <div className="mb-8 max-w-3xl text-right md:mb-10">
+          {content.eyebrow ? (
+            <p className="eyebrow justify-start">{content.eyebrow}</p>
+          ) : null}
+
+          <h2 className="mt-3 text-2xl font-semibold leading-[1.7] text-foreground md:text-[2.05rem]">
+            {content.title}
+          </h2>
+
+          <p className="lead mt-5 max-w-2xl text-justify">
+            {content.description}
+          </p>
+        </div>
+
+        <div className="lg:hidden">
+          <MobileStepper
+            steps={steps}
+            activeStep={activeStep}
+            onStepChange={setActiveStep}
+          />
+
+          <div className="rounded-[1.6rem] border border-border/70 bg-white/88 p-3 shadow-[0_18px_55px_rgb(0_0_0/0.10)] backdrop-blur-xl">
+            {activeStep === "line" ? (
+              <MobileLineStep
+                content={content}
+                lineId={lineId}
+                onSelect={setLineId}
+                onNext={() => setActiveStep("investment")}
+              />
             ) : null}
 
-            <h2 className="section-title mt-3 max-w-xl">{content.title}</h2>
+            {activeStep === "investment" ? (
+              <MobileInvestmentStep
+                content={content}
+                investmentId={investmentId}
+                onSelect={setInvestmentId}
+                onBack={() => setActiveStep("line")}
+                onNext={() => setActiveStep("result")}
+              />
+            ) : null}
 
-            <p className="lead mt-6 max-w-xl text-justify">
-              {content.description}
-            </p>
+            {activeStep === "result" ? (
+              <div>
+                <AdvisorResultCard
+                  content={content}
+                  recommendation={recommendation}
+                  onOpen={() => setModalOpen(true)}
+                />
 
-            <div className="mt-7 grid max-w-md gap-2.5 text-sm text-content-muted">
-              {[
-                content.steps.line,
-                content.steps.investment,
-                content.steps.result,
-              ].map((step, index) => (
-                <div
-                  key={step}
-                  className="flex items-center gap-3 rounded-xl border bg-white/70 px-3 py-2.5 shadow-sm"
+                <button
+                  type="button"
+                  onClick={() => setActiveStep("investment")}
+                  className="mt-3 inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold text-secondary transition hover:bg-surface"
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
-                    {index + 1}
-                  </span>
-                  <span>{step}</span>
-                </div>
-              ))}
+                  <ArrowRight className="size-4" />
+                  {content.ui.mobileBackToInvestment}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="hidden gap-6 lg:grid lg:grid-cols-[1fr_0.92fr] lg:items-start">
+          <div className="rounded-[2rem] border border-border/70 bg-white/82 p-4 shadow-[0_24px_80px_rgb(0_0_0/0.10)] backdrop-blur-xl">
+            <DesktopStepper
+              steps={steps}
+              activeStep={activeStep}
+              onStepChange={setActiveStep}
+            />
+
+            <div className="grid gap-4 xl:grid-cols-2">
+              <LineSelector
+                content={content}
+                lineId={lineId}
+                onSelect={(id) => {
+                  setLineId(id);
+                  setActiveStep("investment");
+                }}
+              />
+
+              <InvestmentSelector
+                content={content}
+                investmentId={investmentId}
+                onSelect={(id) => {
+                  setInvestmentId(id);
+                  setActiveStep("result");
+                }}
+              />
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-secondary/10 bg-white/88 p-3 shadow-[0_26px_90px_rgba(0,0,0,0.13)] backdrop-blur md:p-4">
-            <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-l from-transparent via-primary/35 to-transparent" />
-
-            <div className="grid gap-3 md:grid-cols-[1fr_0.86fr]">
-              <div className="rounded-2xl border border-border/70 bg-surface/80 p-3.5">
-                <div className="mb-3 flex items-center gap-2">
-                  <Factory className="size-4.5 text-primary" />
-                  <h3 className="text-sm font-black">{content.steps.line}</h3>
-                </div>
-
-                <div className="grid gap-2">
-                  {content.lines.map((line) => {
-                    const active = line.id === lineId;
-
-                    return (
-                      <button
-                        key={line.id}
-                        type="button"
-                        onClick={() => setLineId(line.id)}
-                        className={cn(
-                          "rounded-xl border px-3 py-2.5 text-right transition",
-                          active
-                            ? "border-primary bg-primary/10 shadow-sm"
-                            : "border-border bg-white hover:border-primary/50"
-                        )}
-                      >
-                        <span className="block text-[0.84rem] font-bold">
-                          {line.label}
-                        </span>
-                        <span className="mt-1 block text-[0.72rem] leading-5 text-muted-foreground">
-                          {line.subtitle}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-[radial-gradient(circle_at_top_right,rgba(216,74,43,0.18),transparent_16rem),linear-gradient(145deg,#06213b,#003b70)] p-3.5 text-white">
-                <div className="mb-3 flex items-center gap-2">
-                  <Gauge className="size-4.5 text-primary" />
-                  <h3 className="text-sm font-black text-white">
-                    {content.steps.investment}
-                  </h3>
-                </div>
-
-                <div className="grid gap-2">
-                  {content.investments.map((item) => {
-                    const active = item.id === investmentId;
-
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => setInvestmentId(item.id)}
-                        className={cn(
-                          "rounded-xl border px-3 py-2.5 text-right transition",
-                          active
-                            ? "border-primary bg-primary/22"
-                            : "border-white/15 bg-white/6 hover:border-primary/60"
-                        )}
-                      >
-                        <span className="block text-[0.84rem] font-bold text-white">
-                          {item.label}
-                        </span>
-                        <span className="mt-1 block text-[0.72rem] leading-5 text-white/65">
-                          {item.rangeLabel}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <motion.div
-              key={`${lineId}-${investmentId}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className="mt-3 overflow-hidden rounded-2xl border border-secondary/10 bg-[radial-gradient(circle_at_top_left,rgba(216,74,43,0.12),transparent_18rem),linear-gradient(135deg,#f8fafc,#ffffff)] p-4"
-            >
-              <div className="flex items-start gap-3">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md">
-                  <Sparkles className="size-4.5" />
-                </span>
-
-                <div className="min-w-0 flex-1">
-                  <p className="text-[0.72rem] font-bold text-primary">
-                    {content.steps.result}
-                  </p>
-
-                  <h3 className="mt-1 text-lg font-black leading-8">
-                    {recommendation?.title}
-                  </h3>
-
-                  <div className="mt-3 grid gap-2 md:grid-cols-2">
-                    <div className="rounded-xl border bg-white p-3">
-                      <p className="text-[0.72rem] font-bold text-muted-foreground">
-                        ظرفیت پیشنهادی
-                      </p>
-                      <p className="mt-1 text-[0.82rem] font-bold">
-                        {recommendation?.capacity}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border bg-white p-3">
-                      <p className="text-[0.72rem] font-bold text-muted-foreground">
-                        پیکربندی خط
-                      </p>
-                      <p className="mt-1 text-[0.82rem] leading-6">
-                        {recommendation?.configuration}
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="mt-3 flex gap-2 text-justify text-[0.82rem] leading-7 text-content-muted">
-                    <CheckCircle2 className="mt-1 size-4 shrink-0 text-primary" />
-                    {recommendation?.note}
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => setModalOpen(true)}
-                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-[0.82rem] font-bold text-secondary-foreground shadow-md transition hover:-translate-y-0.5 hover:bg-secondary/90"
-                  >
-                    {content.cta.label}
-                    <ArrowLeft className="size-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+          <div className="sticky top-24">
+            <AdvisorResultCard
+              content={content}
+              recommendation={recommendation}
+              onOpen={() => setModalOpen(true)}
+            />
           </div>
         </div>
       </Container>
 
       {modalOpen ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/20 bg-white shadow-[0_30px_120px_rgba(0,0,0,0.35)]">
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              aria-label="بستن"
-              className="absolute left-4 top-4 z-10 rounded-full bg-muted p-2 text-muted-foreground transition hover:text-foreground"
-            >
-              <X className="size-4" />
-            </button>
-
-            <div className="bg-[radial-gradient(circle_at_top_right,rgba(216,74,43,0.20),transparent_18rem),linear-gradient(135deg,#06213b,#003b70)] px-6 py-6 text-white">
-              <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <MessageCircle className="size-5" />
-                </span>
-
-                <div>
-                  <p className="text-xs text-white/70">ارسال از طریق واتس‌اپ</p>
-                  <h3 className="text-lg font-black text-white">
-                    درخواست پیش‌فاکتور اولیه
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-5">
-              <p className="text-sm leading-7 text-content-muted">
-                پیام زیر بر اساس انتخاب‌های شما آماده شده و با کلیک روی دکمه،
-                در واتس‌اپ برای تیم مشاوره سیمرکو ارسال می‌شود.
-              </p>
-
-              <div className="mt-4 rounded-2xl border bg-surface p-4">
-                <div className="mb-2 flex items-center gap-2 text-xs font-bold text-primary">
-                  <Clipboard className="size-4" />
-                  متن آماده ارسال
-                </div>
-
-                <pre className="max-h-56 overflow-auto whitespace-pre-wrap rounded-xl bg-white p-3 text-right text-xs leading-6 text-foreground">
-                  {message}
-                </pre>
-              </div>
-
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
-                >
-                  ارسال در واتس‌اپ
-                  <MessageCircle className="size-4" />
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="inline-flex flex-1 items-center justify-center rounded-xl border px-4 py-3 text-sm font-bold text-foreground transition hover:bg-muted"
-                >
-                  بازگشت و ویرایش انتخاب‌ها
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AdvisorModal
+          content={content}
+          message={message}
+          whatsappUrl={whatsappUrl}
+          onClose={() => setModalOpen(false)}
+        />
       ) : null}
     </section>
+  );
+}
+
+function MobileStepper({
+  steps,
+  activeStep,
+  onStepChange,
+}: {
+  steps: { id: StepId; label: string; number: string }[];
+  activeStep: StepId;
+  onStepChange: (step: StepId) => void;
+}) {
+  return (
+    <div className="mb-4 grid grid-cols-3 gap-2">
+      {steps.map((step) => (
+        <button
+          key={step.id}
+          type="button"
+          onClick={() => onStepChange(step.id)}
+          className={cn(
+            "rounded-2xl border px-2 py-2.5 text-center transition",
+            activeStep === step.id
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border bg-white text-content-muted",
+          )}
+        >
+          <span className="block text-xs font-black">{step.number}</span>
+          <span className="mt-1 block truncate text-[0.68rem] font-bold">
+            {step.label}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function DesktopStepper({
+  steps,
+  activeStep,
+  onStepChange,
+}: {
+  steps: { id: StepId; label: string; number: string }[];
+  activeStep: StepId;
+  onStepChange: (step: StepId) => void;
+}) {
+  return (
+    <div className="mb-4 grid gap-2 md:grid-cols-3">
+      {steps.map((step) => (
+        <button
+          key={step.id}
+          type="button"
+          onClick={() => onStepChange(step.id)}
+          className={cn(
+            "flex items-center gap-3 rounded-2xl border px-3 py-3 text-right transition",
+            activeStep === step.id
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border bg-white text-content-muted hover:border-primary/40 hover:text-foreground",
+          )}
+        >
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
+            {step.number}
+          </span>
+          <span className="text-sm font-bold">{step.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function MobileLineStep({
+  content,
+  lineId,
+  onSelect,
+  onNext,
+}: {
+  content: LineAdvisorSectionContent;
+  lineId?: string;
+  onSelect: (id: string) => void;
+  onNext: () => void;
+}) {
+  return (
+    <motion.div
+      key="mobile-line"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <LineSelector content={content} lineId={lineId} onSelect={onSelect} />
+
+      <button
+        type="button"
+        onClick={onNext}
+        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-secondary-foreground shadow-md"
+      >
+        {content.ui.mobileNextToInvestment}
+        <ArrowLeft className="size-4" />
+      </button>
+    </motion.div>
+  );
+}
+
+function MobileInvestmentStep({
+  content,
+  investmentId,
+  onSelect,
+  onBack,
+  onNext,
+}: {
+  content: LineAdvisorSectionContent;
+  investmentId?: string;
+  onSelect: (id: string) => void;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <motion.div
+      key="mobile-investment"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <InvestmentSelector
+        content={content}
+        investmentId={investmentId}
+        onSelect={onSelect}
+      />
+
+      <div className="mt-3 grid grid-cols-[auto_1fr] gap-2">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-bold text-secondary"
+          aria-label={content.ui.mobileBackToLine}
+        >
+          <ArrowRight className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={onNext}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-secondary-foreground shadow-md"
+        >
+          {content.ui.mobileShowResult}
+          <ArrowLeft className="size-4" />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+function LineSelector({
+  content,
+  lineId,
+  onSelect,
+}: {
+  content: LineAdvisorSectionContent;
+  lineId?: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="rounded-[1.45rem] border border-border/70 bg-surface/80 p-4">
+      <div className="mb-3 flex items-center gap-2">
+        <Factory className="size-4.5 text-primary" />
+        <h3 className="text-sm font-black text-secondary">
+          {content.steps.line}
+        </h3>
+      </div>
+
+      <div className="grid gap-2">
+        {content.lines.map((line) => {
+          const active = line.id === lineId;
+
+          return (
+            <button
+              key={line.id}
+              type="button"
+              onClick={() => onSelect(line.id)}
+              className={cn(
+                "rounded-xl border px-3 py-3 text-right transition",
+                active
+                  ? "border-primary bg-primary/10 shadow-sm"
+                  : "border-border bg-white hover:border-primary/50",
+              )}
+            >
+              <span className="block text-[0.86rem] font-black text-foreground">
+                {line.label}
+              </span>
+              <span className="mt-1 block text-[0.72rem] leading-5 text-muted-foreground">
+                {line.subtitle}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function InvestmentSelector({
+  content,
+  investmentId,
+  onSelect,
+}: {
+  content: LineAdvisorSectionContent;
+  investmentId?: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div className="rounded-[1.45rem] bg-[radial-gradient(circle_at_top_right,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_16rem),linear-gradient(145deg,color-mix(in_oklab,var(--secondary)_92%,black),var(--secondary))] p-4 text-white">
+      <div className="mb-3 flex items-center gap-2">
+        <Gauge className="size-4.5 text-primary" />
+        <h3 className="text-sm font-black text-white">
+          {content.steps.investment}
+        </h3>
+      </div>
+
+      <div className="grid gap-2">
+        {content.investments.map((item) => {
+          const active = item.id === investmentId;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelect(item.id)}
+              className={cn(
+                "rounded-xl border px-3 py-3 text-right transition",
+                active
+                  ? "border-primary bg-primary/25"
+                  : "border-white/15 bg-white/[0.06] hover:border-primary/60",
+              )}
+            >
+              <span className="block text-[0.86rem] font-black text-white">
+                {item.label}
+              </span>
+              <span className="mt-1 block text-[0.72rem] leading-5 text-white/65">
+                {item.rangeLabel}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AdvisorResultCard({
+  content,
+  recommendation,
+  onOpen,
+}: {
+  content: LineAdvisorSectionContent;
+  recommendation: Recommendation | null;
+  onOpen: () => void;
+}) {
+  return (
+    <motion.div
+      key={recommendation?.title}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="overflow-hidden rounded-[2rem] border border-border/70 bg-white shadow-[0_24px_80px_rgb(0_0_0/0.12)]"
+    >
+      <div className="bg-[radial-gradient(circle_at_top_right,color-mix(in_oklab,var(--primary)_16%,transparent),transparent_18rem),linear-gradient(135deg,var(--surface),var(--background))] p-5">
+        <div className="flex items-start gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md">
+            <Sparkles className="size-5" />
+          </span>
+
+          <div>
+            <p className="text-xs font-black text-primary">
+              {content.steps.result}
+            </p>
+
+            <h3 className="mt-1 text-xl font-black leading-8 text-secondary">
+              {recommendation?.title}
+            </h3>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3">
+          <div className="rounded-2xl border bg-white p-4">
+            <p className="text-xs font-bold text-muted-foreground">
+              {content.ui.recommendationCapacityLabel}
+            </p>
+            <p className="mt-1 text-sm font-black text-foreground">
+              {recommendation?.capacity}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border bg-white p-4">
+            <p className="text-xs font-bold text-muted-foreground">
+              {content.ui.recommendationConfigurationLabel}
+            </p>
+            <p className="mt-1 text-sm leading-7 text-content">
+              {recommendation?.configuration}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-4 flex gap-2 text-justify text-sm leading-7 text-content-muted">
+          <CheckCircle2 className="mt-1 size-4 shrink-0 text-primary" />
+          {recommendation?.note}
+        </p>
+
+        <button
+          type="button"
+          onClick={onOpen}
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-secondary-foreground shadow-md transition hover:-translate-y-0.5 hover:bg-secondary/90"
+        >
+          {content.cta.label}
+          <ArrowLeft className="size-4" />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+function AdvisorModal({
+  content,
+  message,
+  whatsappUrl,
+  onClose,
+}: {
+  content: LineAdvisorSectionContent;
+  message: string;
+  whatsappUrl: string;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-xl rounded-[1.5rem] bg-white p-5 shadow-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-black text-primary">
+              {content.ui.modalEyebrow}
+            </p>
+            <h3 className="mt-1 text-xl font-black text-secondary">
+              {content.ui.modalTitle}
+            </h3>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border p-2 text-content-muted transition hover:bg-surface"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+
+        <div className="mt-4 rounded-xl border bg-surface p-4 text-sm leading-7 text-content-muted">
+          <pre className="whitespace-pre-wrap font-sans">{message}</pre>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => navigator.clipboard.writeText(message)}
+            className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-bold text-secondary transition hover:bg-surface"
+          >
+            <Clipboard className="size-4" />
+            {content.ui.copyMessageLabel}
+          </button>
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground transition hover:bg-secondary/90"
+          >
+            <MessageCircle className="size-4" />
+            {content.ui.whatsappLabel}
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }

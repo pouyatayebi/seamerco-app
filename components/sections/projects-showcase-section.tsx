@@ -51,7 +51,7 @@ export async function ProjectsShowcaseSection({
   return (
     <section className="section relative overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgb(255_255_255/0.10),transparent_34rem),linear-gradient(180deg,var(--projects-section-start)_0%,var(--projects-section-middle)_50%,var(--projects-section-end)_100%)] text-white">
 <ProjectsIndustrialPattern
-  className="pointer-events-none absolute inset-0 h-full w-full text-white/18 [--pattern-accent:var(--primary)]"
+  className="hidden lg:block pointer-events-none absolute inset-0 h-full w-full text-white/18 [--pattern-accent:var(--primary)]"
   accentOpacity={0.82}
   shapeOpacity={0.16}
   lineOpacity={0.08}

@@ -45,6 +45,34 @@ export const lineAdvisorSectionSchema = z.object({
       })
     )
   ),
+
+ui: z.object({
+  stepNumbers: z.object({
+    line: z.string(),
+    investment: z.string(),
+    result: z.string(),
+  }),
+  mobileNextToInvestment: z.string(),
+  mobileShowResult: z.string(),
+  mobileBackToLine: z.string(),
+  mobileBackToInvestment: z.string(),
+  recommendationCapacityLabel: z.string(),
+  recommendationConfigurationLabel: z.string(),
+  modalEyebrow: z.string(),
+  modalTitle: z.string(),
+  copyMessageLabel: z.string(),
+  whatsappLabel: z.string(),
+  whatsappMessageLines: z.object({
+    greeting: z.string(),
+    line: z.string(),
+    investment: z.string(),
+    recommendation: z.string(),
+    capacity: z.string(),
+    configuration: z.string(),
+    request: z.string(),
+  }),
+}),
+
 });
 
 export type LineAdvisorSectionContent = z.infer<

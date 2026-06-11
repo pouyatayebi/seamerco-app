@@ -68,7 +68,7 @@ export async function HomeProductionLinesSection({
 
   return (
     <section className="section relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f7f9fb_50%,#ffffff_100%)]">
-      <IndustrialTrianglePattern className="pointer-events-none absolute inset-0 h-full w-full text-secondary/28 [--pattern-accent:hsl(var(--primary))]" />
+      <IndustrialTrianglePattern className="hidden lg:block pointer-events-none absolute inset-0 h-full w-full text-secondary/28 [--pattern-accent:hsl(var(--primary))]" />
 
       <div className="container-content relative z-10">
         <div className="mb-10 max-w-3xl text-right">

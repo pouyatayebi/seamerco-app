@@ -24,7 +24,7 @@ export function GuidesSection({
 
   return (
     <section className="section relative overflow-hidden bg-[linear-gradient(135deg,#ffffff_0%,#f7f9fb_48%,#ffffff_100%)]">
-  <GuidesIndustrialPattern className="pointer-events-none absolute inset-0 h-full w-full text-secondary/30 [--pattern-accent:hsl(var(--primary))]" />
+  <GuidesIndustrialPattern className="hidden lg:block pointer-events-none absolute inset-0 h-full w-full text-secondary/30 [--pattern-accent:hsl(var(--primary))]" />
 
       <Container size="header" className="relative z-10">
         <div className="mx-auto grid max-w-[82rem] gap-5 lg:grid-cols-2">
@@ -48,7 +48,7 @@ function GuideSplitCard({
 
   return (
     <article className="grid overflow-hidden rounded-[1.45rem] border border-border/70 bg-white shadow-[0_14px_38px_rgba(0,0,0,0.065)] transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_24px_56px_rgba(0,0,0,0.10)] md:grid-cols-[1.08fr_0.92fr]">
-      <div className="flex min-h-[22rem] flex-col justify-center p-6 text-left md:p-7">
+      <div className="flex min-h-[22rem] flex-col justify-center p-6 lg:text-left md:p-7">
         <p className="text-xs font-bold tracking-[0.16em] text-primary">
           {item.titleTop}
         </p>

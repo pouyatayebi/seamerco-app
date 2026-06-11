@@ -1,5 +1,4 @@
 import { AboutSection } from "@/components/sections/about-section";
-import { ContentCardGridSection } from "@/components/sections/content-card-grid-section";
 import { GuidesSection } from "@/components/sections/guides-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ProjectsShowcaseSection } from "@/components/sections/projects-showcase-section";
