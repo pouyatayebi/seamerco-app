@@ -1,20 +1,22 @@
-import { notFound } from "next/navigation";
-
 import { ContentCardGridSection } from "@/components/sections/content-card-grid-section";
-
+import { FaqSection } from "@/components/sections/faq-section";
 import { GuidesSection } from "@/components/sections/guides-section";
 import { HeroSection } from "@/components/sections/hero-section";
-import { LineAdvisorSection } from "@/components/sections/line-advisor-section";
+import { MediaGallerySection } from "@/components/sections/media-gallery-section";
 import { ProjectsShowcaseSection } from "@/components/sections/projects-showcase-section";
+import { RelatedArticlesSection } from "@/components/sections/related-articles-section";
+import { TechnicalSpecsSection } from "@/components/sections/technical-specs-section";
+import { ContentOverviewSection } from "@/components/sections/content-overview-section";
+
 import { readYamlContent } from "@/lib/content/read-yaml";
-import { getMediaUrl } from "@/lib/media/media-url";
 import { getSiteDefaults } from "@/lib/site/get-site-defaults";
-import { getSiteSettings } from "@/lib/site/get-site-settings";
+import { siteUiSchema } from "@/lib/site/ui.schema";
+
 import { pageContentSchema } from "@/lib/validations/content/page.schema";
 import { guidesSectionSchema } from "@/lib/validations/content/sections/guides.schema";
-import { lineAdvisorSectionSchema } from "@/lib/validations/content/sections/line-advisor.schema";
 import { projectsShowcaseSectionSchema } from "@/lib/validations/content/sections/projects-showcase.schema";
-import { ContentOverviewSection } from "@/components/shared/content-overview-section";
+import { readRawMarkdown } from "@/lib/content/read-raw-markdown";
+import { AdditionalContentSection } from "@/components/sections/additional-content-section";
 
 type PageProps = {
   params: Promise<{
@@ -23,106 +25,57 @@ type PageProps = {
   }>;
 };
 
-async function getPageData(segments: string[]) {
-  try {
-    const [
-      content,
-      defaults,
-      settings,
-      guidesContent,
-      projectsContent,
-      advisorContent,
-    ] = await Promise.all([
+export default async function MachineryPage({ params }: PageProps) {
+  const { category, slug } = await params;
+
+  const segments = ["machinery", category, slug];
+
+  const [content, defaults, guidesContent, projectsContent, ui,additionalContent] =
+    await Promise.all([
       readYamlContent(pageContentSchema, "fa", segments),
       getSiteDefaults(),
-      getSiteSettings(),
       readYamlContent(guidesSectionSchema, "fa", ["sections", "guides"]),
       readYamlContent(projectsShowcaseSectionSchema, "fa", [
         "sections",
         "projects-showcase",
       ]),
-      readYamlContent(lineAdvisorSectionSchema, "fa", [
-        "sections",
-        "line-advisor",
-      ]),
+      readYamlContent(siteUiSchema, "fa", ["site", "ui"]),
+      readRawMarkdown("fa",segments)
     ]);
 
-    return {
-      content,
-      defaults,
-      settings,
-      guidesContent,
-      projectsContent,
-      advisorContent,
-    };
-  } catch (error){
-      console.error("Machinery category page error:", {
-   
-    segments,
-    error,
-  });
+  return (
+    <main>
+      <HeroSection
+        hero={content.hero}
+        defaults={defaults.hero}
+        pageSegments={segments}
+      />
 
-  throw error;
-  }
-}
+      <ContentOverviewSection
+        overview={content.overview}
+        mediaSegments={segments}
+        ui={ui}
+      />
 
-export default async function MachinerySinglePage({ params }: PageProps) {
-  const { category, slug } = await params;
-  const segments = ["machinery", category, slug];
+      <TechnicalSpecsSection content={content.technicalSpecs} />
 
-  const {
-    content,
-    defaults,
-    settings,
-    guidesContent,
-    projectsContent,
-    advisorContent,
-  } = await getPageData(segments);
+      <MediaGallerySection
+        content={content.gallery}
+        mediaSegments={segments}
+      />
 
-  const fallbackImage = content.featuredImage
-    ? getMediaUrl([...segments, content.featuredImage])
-    : content.cover
-      ? getMediaUrl([...segments, content.cover])
-      : content.hero?.poster
-        ? getMediaUrl([...segments, content.hero.poster])
-        : undefined;
+      {content.cardGrid ? (
+        <ContentCardGridSection content={content.cardGrid} />
+      ) : null}
 
- return (
-  <main>
-    <HeroSection
-      hero={content.hero}
-      defaults={defaults.hero}
-      pageSegments={segments}
-      variant="page"
-    />
+      <GuidesSection content={guidesContent} />
 
-    <ContentOverviewSection
-      overview={content.overview}
-      mediaSegments={segments}
-      fallbackImage={
-        content.featuredImage
-          ? getMediaUrl([...segments, content.featuredImage])
-          : content.cover
-            ? getMediaUrl([...segments, content.cover])
-            : content.hero?.poster
-              ? getMediaUrl([...segments, content.hero.poster])
-              : undefined
-      }
-      fallbackAlt={content.title ?? content.hero?.title ?? "خط تولید سیمرکو"}
-    />
+      <ProjectsShowcaseSection content={projectsContent} />
 
-    {content.cardGrid ? (
-      <ContentCardGridSection content={content.cardGrid} />
-    ) : null}
+      <FaqSection content={content.faq} mediaSegments={segments} />
 
-    <GuidesSection content={guidesContent} />
-
-    <ProjectsShowcaseSection content={projectsContent} />
-
-    <LineAdvisorSection
-      content={advisorContent}
-      whatsappHref={settings.contact.whatsapp.href}
-    />
-  </main>
-);
+      <RelatedArticlesSection content={content.relatedArticles} />
+      <AdditionalContentSection content={additionalContent} />
+    </main>
+  );
 }

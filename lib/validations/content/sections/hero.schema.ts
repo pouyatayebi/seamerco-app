@@ -23,6 +23,14 @@ export const heroSchema = z.object({
   backgroundType: z.enum(["video", "image"]).optional(),
   logotype: z.boolean().optional(),
   badge: z.boolean().optional(),
+  breadcrumbs: z
+    .array(
+      z.object({
+        title: z.string(),
+        href: z.string().optional(),
+      }),
+    )
+    .optional(),
 
   featureLinks: z
     .object({

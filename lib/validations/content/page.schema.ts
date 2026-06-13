@@ -6,7 +6,8 @@ import { contentOverviewSectionSchema } from "./sections/content-overview.schema
 import { lineLayoutSectionSchema } from "./sections/line-layout.schema";
 import { faqSectionSchema } from "./sections/faq.schema";
 import { relatedArticlesSectionSchema } from "./sections/related-articles.schema";
-
+import { mediaGallerySectionSchema } from "@/lib/validations/content/sections/media-gallery.schema";
+import { technicalSpecsSectionSchema } from "@/lib/validations/content/sections/technical-specs.schema";
 const pageSeoSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -28,6 +29,8 @@ export const pageContentSchema = z.object({
   code: z.string().optional(),
   faq: faqSectionSchema.optional(),
   relatedArticles: relatedArticlesSectionSchema.optional(),
+  technicalSpecs: technicalSpecsSectionSchema.optional(),
+  gallery: mediaGallerySectionSchema.optional(),
 });
 
 export type PageContent = z.infer<typeof pageContentSchema>;
