@@ -5,6 +5,10 @@ const mediaOrigin = process.env.SEAMERCO_MEDIA_ORIGIN?.replace(/\/$/, "");
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  images: {
+    unoptimized: true,
+  },
+
   async rewrites() {
     if (!mediaOrigin) return [];
 
