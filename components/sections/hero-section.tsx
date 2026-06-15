@@ -54,7 +54,7 @@ function HeroHomeFeaturePanel({
             ) : null}
 
             {featureLinks.titleBottom ? (
-              <h2 className="text-[1.45rem] font-black leading-9 text-secondary lg:text-[1.65rem]">
+              <h2 className="text-[1.45rem] font-semibold leading-9 text-secondary lg:text-[1.65rem]">
                 {featureLinks.titleBottom}
               </h2>
             ) : null}
@@ -80,7 +80,7 @@ function HeroHomeFeaturePanel({
               ) : null}
 
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-[0.78rem] font-black leading-5 text-foreground">
+                <span className="truncate text-[0.78rem] font-semibold leading-5 text-foreground">
                   {item.title}
                 </span>
 
@@ -307,7 +307,7 @@ export function HeroSection({
 
               <h1
                 className={cn(
-                  "text-balance font-semibold tracking-tight text-white",
+                  "text-balance font-medium tracking-tight text-white",
                   isHome
                     ? "text-3xl sm:text-4xl md:text-5xl lg:text-[48px]"
                     : "text-3xl leading-[1.5] md:text-5xl",

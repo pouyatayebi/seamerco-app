@@ -46,13 +46,13 @@ export function AboutSection({
               </p>
             ) : null}
 
-            <h2 className="text-2xl font-black leading-[1.65] text-foreground md:text-[2rem]">
+            <h2 className="text-2xl font-semibold leading-[1.65] text-foreground md:text-[2rem]">
               {content.title}
             </h2>
 
             <div className="mt-4 text-justify text-[0.92rem] leading-[2.25] text-content-muted">
               <p>
-                <strong className="font-black text-foreground">
+                <strong className="font-semibold text-foreground">
                   {content.introStrong}
                 </strong>{" "}
                 {content.paragraphs[0]}
@@ -67,14 +67,14 @@ export function AboutSection({
 
             <Link
               href={content.readMore.href}
-              className="mt-4 inline-flex w-fit items-center gap-2 text-sm font-bold text-primary transition hover:-translate-x-1"
+              className="mt-2 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition hover:-translate-x-1"
             >
               {content.readMore.label}
-              <MoveLeft className="size-5 stroke-[3]" />
+              <MoveLeft className="size-5 stroke-[2]" />
             </Link>
 
             <div className="mt-auto hidden pt-5 lg:block">
-              <div className="grid max-w-[24rem] grid-cols-3 gap-2">
+              <div className="grid max-w-[20rem] grid-cols-3 gap-2">
                 {content.media.items.map((item) => (
                   <VideoLightbox
                     key={item.video}

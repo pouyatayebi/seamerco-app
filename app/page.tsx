@@ -11,6 +11,8 @@ import { projectsShowcaseSectionSchema } from "@/lib/validations/content/section
 import { LineAdvisorSection } from "@/components/sections/line-advisor-section";
 import { lineAdvisorSectionSchema } from "@/lib/validations/content/sections/line-advisor.schema";
 import { HomeProductionLinesSection } from "@/components/sections/home-production-lines-section";
+import { SplitFeatureSection } from "@/components/sections/split-feature-section";
+import { splitFeatureSectionSchema } from "@/lib/validations/content/sections/split-feature.schema";
 
 export default async function HomePage() {
   const [
@@ -20,6 +22,8 @@ export default async function HomePage() {
     guidesContent,
     projectsContent,
     lineAdvisorContent,
+    factoryContent,
+    machineryContent,
   ] = await Promise.all([
     readYamlContent(pageContentSchema, "fa", ["home"]),
     getSiteDefaults(),
@@ -33,6 +37,8 @@ export default async function HomePage() {
       "sections",
       "line-advisor",
     ]),
+    readYamlContent(splitFeatureSectionSchema, "fa", ["sections", "factory"]),
+    readYamlContent(splitFeatureSectionSchema, "fa", ["sections", "machinery"]),
   ]);
 
   return (
@@ -49,13 +55,27 @@ export default async function HomePage() {
       {/* {pageContent.cardGrid ? (
         <ContentCardGridSection content={pageContent.cardGrid} />
       ) : null} */}
-{pageContent.cardGrid ? (
-  <HomeProductionLinesSection content={pageContent.cardGrid} />
-) : null}
-      <GuidesSection content={guidesContent} />
-
+      {pageContent.cardGrid ? (
+        <HomeProductionLinesSection
+          content={pageContent.cardGrid}
+          layout="wide"
+        />
+      ) : null}
+      {/* <GuidesSection content={guidesContent} /> */}
+   
+      <SplitFeatureSection
+        content={machineryContent}
+        mediaSegments={["sections", "machinery"]}
+        imagePosition="left"
+      />
       <ProjectsShowcaseSection content={projectsContent} />
-      <LineAdvisorSection content={lineAdvisorContent} />
+      {/* <LineAdvisorSection content={lineAdvisorContent} /> */}
+
+      <SplitFeatureSection
+        content={factoryContent}
+        mediaSegments={["sections", "factory"]}
+        imagePosition="right"
+      />
     </main>
   );
 }
