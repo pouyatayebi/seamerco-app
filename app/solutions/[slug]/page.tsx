@@ -70,7 +70,7 @@ export default async function SolutionPage({ params }: PageProps) {
 
       <FaqSection content={content.faq} mediaSegments={segments} />
 
-      <RelatedArticlesSection content={content.relatedArticles} />
+      {/* <RelatedArticlesSection content={content.relatedArticles} /> */}
       <AdditionalContentSection content={additionalContent} />
     </main>
   );
