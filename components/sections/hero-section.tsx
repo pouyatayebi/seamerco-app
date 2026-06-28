@@ -42,7 +42,7 @@ function HeroHomeFeaturePanel({
       <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-l from-transparent via-white to-transparent" />
 
       {(featureLinks.titleTop || featureLinks.titleBottom) && (
-        <div className="mb-3 flex items-center justify-start lg:justify-end border-b border-border/55 pb-3 lg:mb-0 lg:w-[15rem] lg:shrink-0 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
+        <div className="mb-3 flex items-center justify-start border-b border-border/55 pb-3 lg:mb-0 lg:w-[15rem] lg:shrink-0 lg:justify-end lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
           <div className="text-right">
             {featureLinks.titleTop ? (
               <div className="mb-1 flex items-center justify-end gap-3">
@@ -104,62 +104,55 @@ function HeroCompactFeaturePanel({
   featureLinks: NonNullable<HeroContent["featureLinks"]>;
 }) {
   return (
-    <div className="relative overflow-hidden border-t border-white/10 bg-[linear-gradient(180deg,rgba(5,28,50,0.92),rgba(3,18,34,0.96))] px-4 py-5 text-white shadow-[0_-18px_45px_rgba(0,0,0,0.24)] backdrop-blur-md md:px-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-primary/45 to-transparent" />
+    <div className="relative overflow-hidden rounded-[1.35rem] border border-white/14 bg-secondary/92 p-4 text-white shadow-[0_22px_70px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-xl md:p-5">
+      <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-l from-transparent via-white/28 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_28rem)]" />
 
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-4 lg:grid-cols-[13rem_1fr] lg:items-center">
-        {(featureLinks.titleTop || featureLinks.titleBottom) && (
-          <div className="text-center lg:text-right">
-            {featureLinks.titleTop ? (
-              <p className="text-xs font-black leading-5 text-primary">
-                {featureLinks.titleTop}
-              </p>
-            ) : null}
+      {(featureLinks.titleTop || featureLinks.titleBottom) ? (
+        <div className="relative z-10 mb-4 text-center">
+          {featureLinks.titleTop ? (
+            <p className="text-xs font-black leading-6 text-primary md:text-sm">
+              {featureLinks.titleTop}
+            </p>
+          ) : null}
 
-            {featureLinks.titleBottom ? (
-              <h2 className="mt-1 text-base font-black leading-7 text-white md:text-lg">
-                {featureLinks.titleBottom}
-              </h2>
-            ) : null}
-          </div>
-        )}
-
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {featureLinks.items.map((rawItem, index) => {
-            const item = rawItem as HeroFeatureItemWithIcon;
-            const Icon = item.icon ? heroIconMap[item.icon] : null;
-
-            return (
-              <Link
-                key={item.href ?? `${item.title}-${index}`}
-                href={item.href}
-                className="group relative flex h-[4.75rem] items-center gap-3 overflow-hidden rounded-xl border border-white/12 bg-white/[0.035] px-3 text-right transition duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-white/[0.065]"
-              >
-                <span className="absolute inset-y-3 right-0 w-0.5 rounded-full bg-primary/70 opacity-0 transition group-hover:opacity-100" />
-
-                {Icon ? (
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition group-hover:bg-primary/15">
-                    <Icon className="size-6" />
-                  </span>
-                ) : null}
-
-                <span className="min-w-0">
-                  <span className="block truncate text-[0.82rem] font-black leading-6 text-white">
-                    {item.title}
-                  </span>
-
-                  {item.subtitle ? (
-                    <span className="block truncate text-[0.68rem] leading-5 text-white/56">
-                      {item.subtitle}
-                    </span>
-                  ) : null}
-                </span>
-
-                <span className="mr-auto hidden size-1.5 shrink-0 rounded-full bg-primary/60 transition group-hover:bg-primary md:block" />
-              </Link>
-            );
-          })}
+          {featureLinks.titleBottom ? (
+            <h2 className="mt-1 text-xl font-semibold leading-8 text-white md:text-2xl">
+              {featureLinks.titleBottom}
+            </h2>
+          ) : null}
         </div>
+      ) : null}
+
+      <div className="relative z-10 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+        {featureLinks.items.map((rawItem, index) => {
+          const item = rawItem as HeroFeatureItemWithIcon;
+          const Icon = item.icon ? heroIconMap[item.icon] : null;
+
+          return (
+            <Link
+              key={item.href ?? `${item.title}-${index}`}
+              href={item.href}
+              className="group flex min-h-[6.7rem] flex-col items-center justify-center rounded-xl border border-white/22 bg-white/[0.055] px-2.5 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition duration-300 hover:-translate-y-1 hover:border-primary/55 hover:bg-white/[0.11] hover:shadow-[0_14px_35px_rgba(0,0,0,0.18)]"
+            >
+              {Icon ? (
+                <span className="mb-2 flex size-11 items-center justify-center rounded-full bg-white/95 text-primary shadow-sm transition group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="size-6" />
+                </span>
+              ) : null}
+
+              <span className="line-clamp-1 text-[0.78rem] font-black leading-5 text-white">
+                {item.title}
+              </span>
+
+              {item.subtitle ? (
+                <span className="mt-0.5 line-clamp-1 text-[0.66rem] leading-4 text-white/68">
+                  {item.subtitle}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -183,11 +176,12 @@ export function HeroSection({
 
   const video = hero?.video
     ? getPageMediaUrl(pageSegments, hero.video)
-    : defaults.video
+    : isHome && defaults.video
       ? getMediaUrl(["site", "defaults", defaults.video])
       : undefined;
 
-  const backgroundType = hero?.backgroundType ?? "video";
+  const backgroundType = hero?.backgroundType ?? (video ? "video" : "image");
+
   const showLogotype = hero?.logotype ?? defaults.logotype.enabled;
   const showBadge = hero?.badge ?? defaults.badge.enabled;
 
@@ -332,7 +326,7 @@ export function HeroSection({
               <div
                 className={cn(
                   "mx-auto",
-                  isCompactFeature ? "max-w-[68rem]" : "max-w-[62rem]",
+                  isCompactFeature ? "max-w-[72rem]" : "max-w-[62rem]",
                 )}
               >
                 {featurePanel}

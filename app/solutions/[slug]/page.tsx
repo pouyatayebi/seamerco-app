@@ -5,7 +5,7 @@ import { ProjectsShowcaseSection } from "@/components/sections/projects-showcase
 import { SolutionLineLayoutSection } from "@/components/sections/solution-line-layout-section";
 import { TechnicalSpecsSection } from "@/components/sections/technical-specs-section";
 import { FaqSection } from "@/components/sections/faq-section";
-import { RelatedArticlesSection } from "@/components/sections/related-articles-section";
+// import { RelatedArticlesSection } from "@/components/sections/related-articles-section";
 import { ContentOverviewSection } from "@/components/sections/content-overview-section";
 
 import { readYamlContent } from "@/lib/content/read-yaml";

@@ -8,6 +8,7 @@ import { CannedOlivePickledLineIcon } from "@/components/svg/CannedOlivePickledL
 import { CannedTunaLineIcon } from "@/components/svg/CannedTunaLineIcon";
 import { GlassIcon } from "@/components/svg/GlassIcon";
 import { SachetIcon } from "@/components/svg/SachetIcon";
+import {TomatoBulkIcon } from "@/components/svg/TomatoBulkIcon";
 import { TomatoPackagingLineIcon } from "@/components/svg/TomatoPackagingLineIcon";
 import { TomatoProcessingLineIcon } from "@/components/svg/TomatoProcessingLineIcon";
 
@@ -25,6 +26,8 @@ export const heroIconMap = {
   "tomato-glass": GlassIcon,
   "tomato-aseptic": AsepticIcon,
   "tomato-sachet": SachetIcon,
+  "tomato-bulk": TomatoBulkIcon,
+  
 } satisfies Record<string, HeroIconComponent>;
 
 export type HeroIconKey = keyof typeof heroIconMap;
