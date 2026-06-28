@@ -64,14 +64,14 @@ export default async function SolutionPage({ params }: PageProps) {
         <ContentCardGridSection content={content.cardGrid} />
       ) : null}
 
-      <GuidesSection content={guidesContent} />
+      {/* <GuidesSection content={guidesContent} />
 
-      <ProjectsShowcaseSection content={projectsContent} />
+      <ProjectsShowcaseSection content={projectsContent} /> */}
 
       <FaqSection content={content.faq} mediaSegments={segments} />
 
       {/* <RelatedArticlesSection content={content.relatedArticles} /> */}
-      {/* <AdditionalContentSection content={additionalContent} /> */}
+      <AdditionalContentSection content={additionalContent} />
     </main>
   );
 }
