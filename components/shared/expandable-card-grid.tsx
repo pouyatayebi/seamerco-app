@@ -93,6 +93,7 @@ function ExpandableCard({
           {item.href ? (
             <Link
               href={item.href}
+               prefetch={false}
               className="inline-flex h-7 shrink-0 items-center justify-center rounded-md bg-secondary px-3 text-[0.68rem] font-bold text-secondary-foreground transition-colors hover:bg-secondary/90"
             >
               {detailButtonLabel}
@@ -146,6 +147,7 @@ function ExpandableCard({
           {item.href ? (
             <Link
               href={item.href}
+               prefetch={false}
               className="mt-auto inline-flex h-8 w-fit items-center justify-center rounded-md bg-primary px-3 text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               {detailButtonLabel}
