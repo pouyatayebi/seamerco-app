@@ -7,16 +7,16 @@ import { TechnicalSpecsSection } from "@/components/sections/technical-specs-sec
 import { FaqSection } from "@/components/sections/faq-section";
 // import { RelatedArticlesSection } from "@/components/sections/related-articles-section";
 import { ContentOverviewSection } from "@/components/sections/content-overview-section";
+import { AdditionalContentSection } from "@/components/sections/additional-content-section";
 
 import { readYamlContent } from "@/lib/content/read-yaml";
+import { readRawMarkdown } from "@/lib/content/read-raw-markdown";
 import { getSiteDefaults } from "@/lib/site/get-site-defaults";
 import { siteUiSchema } from "@/lib/site/ui.schema";
 
 import { pageContentSchema } from "@/lib/validations/content/page.schema";
 import { guidesSectionSchema } from "@/lib/validations/content/sections/guides.schema";
 import { projectsShowcaseSectionSchema } from "@/lib/validations/content/sections/projects-showcase.schema";
-import { AdditionalContentSection } from "@/components/sections/additional-content-section";
-import { readRawMarkdown } from "@/lib/content/read-raw-markdown";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -26,18 +26,24 @@ export default async function SolutionPage({ params }: PageProps) {
   const { slug } = await params;
   const segments = ["solutions", slug];
 
-  const [content, defaults, guidesContent, projectsContent, ui,additionalContent] =
-    await Promise.all([
-      readYamlContent(pageContentSchema, "fa", segments),
-      getSiteDefaults(),
-      readYamlContent(guidesSectionSchema, "fa", ["sections", "guides"]),
-      readYamlContent(projectsShowcaseSectionSchema, "fa", [
-        "sections",
-        "projects-showcase",
-      ]),
-      readYamlContent(siteUiSchema, "fa", ["site", "ui"]),
-      readRawMarkdown("fa", segments),
-    ]);
+  const [
+    content,
+    defaults,
+    guidesContent,
+    projectsContent,
+    ui,
+    additionalContent,
+  ] = await Promise.all([
+    readYamlContent(pageContentSchema, "fa", segments),
+    getSiteDefaults(),
+    readYamlContent(guidesSectionSchema, "fa", ["sections", "guides"]),
+    readYamlContent(projectsShowcaseSectionSchema, "fa", [
+      "sections",
+      "projects-showcase",
+    ]),
+    readYamlContent(siteUiSchema, "fa", ["site", "ui"]),
+    readRawMarkdown("fa", segments),
+  ]);
 
   return (
     <main>
@@ -61,7 +67,10 @@ export default async function SolutionPage({ params }: PageProps) {
       />
 
       {content.cardGrid ? (
-        <ContentCardGridSection content={content.cardGrid} />
+        <ContentCardGridSection
+          content={content.cardGrid}
+          mediaSegments={segments}
+        />
       ) : null}
 
       {/* <GuidesSection content={guidesContent} />
@@ -71,6 +80,7 @@ export default async function SolutionPage({ params }: PageProps) {
       <FaqSection content={content.faq} mediaSegments={segments} />
 
       {/* <RelatedArticlesSection content={content.relatedArticles} /> */}
+
       <AdditionalContentSection content={additionalContent} />
     </main>
   );
